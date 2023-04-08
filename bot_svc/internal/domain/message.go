@@ -17,7 +17,7 @@ type Message struct {
 
 func (m *Message) Fill(msg *proto.Message) {
 	m.ID = uuid.NewString()
-	m.UserName = msg.UserName
-	m.Body = msg.Text
+	m.UserName = msg.GetUserName()
+	m.Body = msg.GetBody()
 	m.Created = time.Now()
 }

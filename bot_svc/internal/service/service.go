@@ -8,7 +8,7 @@ import (
 )
 
 type Storage interface {
-	Insert(ctx context.Context, msg *domain.Message) string
+	Insert(ctx context.Context, msg *domain.Message) (string, error)
 }
 
 func New(st Storage) *Service {
@@ -26,9 +26,13 @@ func (s *Service) SendMessage(ctx context.Context, msg *proto.Message) (*proto.R
 
 	msgDTO := domain.Message{}
 	msgDTO.Fill(msg)
-	id := s.storage.Insert(ctx, &msgDTO)
-	if id == "" {
-		return &proto.Response{}, nil
+	id, err := s.storage.Insert(ctx, &msgDTO)
+	if err != nil {
+		return nil, err
 	}
-	return &proto.Response{}, nil
+
+	return &proto.Response{
+		Id:     id,
+		Status: true,
+	}, nil
 }
