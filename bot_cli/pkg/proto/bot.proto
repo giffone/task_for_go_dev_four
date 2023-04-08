@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package tgbot;
+option go_package = "tgbot/pkg/proto/proto";
 
 message Message {
     string user_name = 1;
