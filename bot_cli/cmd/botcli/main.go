@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"tgbot/internal/bot"
 	"tgbot/internal/config"
@@ -9,22 +8,17 @@ import (
 )
 
 func main() {
-	var addr, token string
-	flag.StringVar(&token, "token", "", "telegram token")
-	flag.StringVar(&addr, "addr", "localhost:50051", "the address to connect to")
-	flag.Parse()
+	// configuration
+	conf := config.NewConf()
 
 	// grpc cli
-	grpcCli, err := grpc_api.NewGrpcClient(addr)
+	grpcCli, err := grpc_api.NewGrpcClient(conf.Addr)
 	if err != nil {
 		log.Fatalf("grpc client: %v", err)
 	}
 	defer grpcCli.Close()
 
-	// configuration
-	conf := config.NewBotConf(token)
-
 	// telegram cli
-	b := bot.NewBot(conf, grpcCli)
+	b := bot.NewBot(&conf.BotConf, grpcCli)
 	b.Listener()
 }

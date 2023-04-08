@@ -1,6 +1,14 @@
 package config
 
-import "log"
+import (
+	"flag"
+	"log"
+)
+
+type Conf struct {
+	Addr string
+	BotConf
+}
 
 type BotConf struct {
 	Token   string
@@ -9,14 +17,19 @@ type BotConf struct {
 	Offset  int
 }
 
-func NewBotConf(token string) *BotConf {
-	if token == "" {
+func NewConf() *Conf {
+	cf := Conf{}
+	flag.StringVar(&cf.Token, "token", "", "telegram token")
+	flag.StringVar(&cf.Addr, "addr", "localhost:50051", "the address to connect to")
+	flag.Parse()
+	if cf.Token == "" {
 		log.Fatalln("token is empty")
 	}
-	return &BotConf{
-		Token:   token,
-		Debug:   true,
-		TimeOut: 60,
-		Offset:  0,
+	if cf.Addr == "" {
+		log.Fatalln("addr is empty")
 	}
+	cf.Debug = true
+	cf.TimeOut = 60
+	cf.Offset = 0
+	return &cf
 }
