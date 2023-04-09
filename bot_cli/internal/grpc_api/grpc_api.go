@@ -27,13 +27,13 @@ func NewGrpcClient(address string) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) SendMessage(name string, text string) bool {
-	req := &proto.Message{
+func (c *Client) InsertNote(name string, text string) bool {
+	req := proto.NewNote{
 		UserName: name,
-		Text:     text,
+		Body:     text,
 	}
 
-	resp, err := c.service.SendMessage(context.Background(), req)
+	resp, err := c.service.InsertNote(context.Background(), &req)
 	if err != nil {
 		log.Printf("send message: %v", err)
 		return false
