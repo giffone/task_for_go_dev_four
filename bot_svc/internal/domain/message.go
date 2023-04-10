@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Message struct {
+type Note struct {
 	// SenderID int64
 	ID       string `db:"id"`
 	UserName string `db:"user_name"`
@@ -15,9 +15,19 @@ type Message struct {
 	Created  time.Time
 }
 
-func (m *Message) Fill(msg *proto.Message) {
-	m.ID = uuid.NewString()
-	m.UserName = msg.GetUserName()
-	m.Body = msg.GetBody()
-	m.Created = time.Now()
+func (n *Note) Fill(msg *proto.NewNote) {
+	n.ID = uuid.NewString()
+	n.UserName = msg.GetUserName()
+	n.Body = msg.GetBody()
+	n.Created = time.Now()
+}
+
+func (n *Note) Validate() error {
+	if n.UserName == "" {
+		return ErrUserName
+	}
+	if n.Body == "" {
+		return ErrTextBody
+	}
+	return nil
 }
