@@ -22,18 +22,18 @@ type storage struct {
 	db *sqlx.DB
 }
 
-func (s *storage) Insert(ctx context.Context, msg *domain.Message) string {
+func (s *storage) Insert(ctx context.Context, msg *domain.Note) (string, error) {
 	if _, err := s.db.NamedExecContext(ctx, inserQuery, msg); err != nil {
 		log.Printf("db: insert: exec: %v", err)
-		return ""
+		return "", err
 	}
-	return msg.ID
+	return msg.ID, nil
 }
 
-func (s *storage) Update(ctx context.Context, msg *domain.Message) bool {
+func (s *storage) Update(ctx context.Context, msg *domain.Note) bool {
 	return false
 }
 
-func (s *storage) Delete(ctx context.Context, msg *domain.Message) bool {
+func (s *storage) Delete(ctx context.Context, msg *domain.Note) bool {
 	return false
 }
